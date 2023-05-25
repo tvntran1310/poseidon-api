@@ -1,18 +1,10 @@
 import express from 'express';
 
 import * as authController from './controllers/auth.controller';
+import RouterWrapper from '../../utils/router.util';
 
-const router = express.Router();
+const routerWrapper = new RouterWrapper();
 
-router.post('/register', handleRequestWrapper(authController.registerAccount));
+routerWrapper.post('/register', authController.registerAccount);
 
-function handleRequestWrapper(handleRequestFunc) {
-  return async (req, res) => {
-    const returnData = await handleRequestFunc({
-      data: req.body
-    });
-    res.send(returnData);
-  }
-}
-
-export default router;
+export default routerWrapper.router;

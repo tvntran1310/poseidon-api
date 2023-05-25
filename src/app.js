@@ -1,12 +1,20 @@
 import express from 'express';
+import mongoose from 'mongoose';
+import * as dotenv from 'dotenv';
+
+import authRouter from './modules/auth-module/auth.router';
+
+dotenv.config();
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+// connect mongo
+const { MONGO_HOST, MONGO_PORT, MONGO_DB_NAME } = process.env;
+mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB_NAME}`);
 
-const port = 2000;
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+app.use(express.json());
+
+app.use('/api/v1/auth', authRouter);
+
+const port = process.env.SERVER_PORT || 3000;
+app.listen(port);

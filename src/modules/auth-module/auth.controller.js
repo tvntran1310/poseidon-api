@@ -27,6 +27,25 @@ export async function registerAccount({ data }) {
     });
 }
 
-export function loginAccount(req, res) {
-  res.send({});
+export function loginAccount({ data }) {
+  const schema = Joi.object({
+    email: Joi.string()
+      .required(),
+    password: Joi.string()
+      .required(),
+  });
+
+  return schema
+    .validateAsync(data, {
+      stripUnknown: true
+    })
+    .then(data => {
+      return data;
+    })
+    .catch(err => {
+      return Promise.reject({
+        error: 'SchemaValidationError',
+        message: err.message,
+      });
+    });
 }

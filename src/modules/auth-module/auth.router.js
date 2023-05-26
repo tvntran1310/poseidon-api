@@ -1,6 +1,4 @@
-import express from 'express';
-
-import * as authController from './controllers/auth.controller';
+import * as authController from './auth.controller';
 import RouterWrapper from '../../utils/router.util';
 
 const routerWrapper = new RouterWrapper();

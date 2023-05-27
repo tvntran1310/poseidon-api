@@ -12,7 +12,40 @@ async function encodePassword (password) {
   return password;
 };
 
+function validateEmailIsrequire ({ id, data }) {
+  const email = lodash.get(data, 'email');
+  if (lodash.isNil(email)) return;
+  const query = {
+    $and: [
+      {
+        deleted: false,
+        email
+      }
+    ]
+  };
+
+  if (!lodash.isNil(id)) {
+    query.$and.push({
+      _id: {
+        $ne: id
+      }
+    });
+  }
+
+  return AccountModel
+    .findOne(query)
+    .then(account => {
+      if (!lodash.isNil(account)) {
+        return Promise.reject(
+          new Error('Email này đã tồn tại')
+        );
+      }
+    });
+}
+
 export async function createAccount (data) {
+  // validate data
+  await validateEmailIsrequire({ data });
 
   let account = new AccountModel();
   account.firstName = data.firstName;

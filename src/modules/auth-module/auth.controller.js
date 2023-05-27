@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import * as AccountService from './auth.service';
 
 export async function registerAccount({ data }) {
   const schema = Joi.object({
@@ -17,7 +18,7 @@ export async function registerAccount({ data }) {
       stripUnknown: true
     })
     .then(data => {
-      return data;
+      return AccountService.createAccount(data);
     })
     .catch(err => {
       return Promise.reject({

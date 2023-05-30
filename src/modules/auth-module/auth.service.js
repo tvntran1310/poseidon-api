@@ -12,6 +12,27 @@ async function encodePassword (password) {
   return password;
 };
 
+async function verifyPassword ({email, password}) {
+  if (lodash.isNil(email)) return;
+  const account = await AccountModel.findOne({
+    deleted: false,
+    email
+  });
+
+  if (lodash.isNil(account)) {
+    return Promise.reject(
+      new Error('account not found')
+    )
+  } else {
+    const isCorrectPassword = await bcrypt.compare(password, account.password);
+    if (!isCorrectPassword) {
+      return Promise.reject(
+        new Error('login failed')
+      )
+    };
+  }
+}
+
 function validateEmailIsrequire ({ id, data }) {
   const email = lodash.get(data, 'email');
   if (lodash.isNil(email)) return;
@@ -58,4 +79,11 @@ export async function createAccount (data) {
   account.updatedAt = now;
 
   account.save();
+};
+
+export async function loginAccount (data) {
+  await verifyPassword({
+    email: data.email,
+    password: data.password
+  });
 };

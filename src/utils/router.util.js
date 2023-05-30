@@ -29,10 +29,11 @@ function handleRequestWrapper(handleRequestFunc) {
     }).then(returnData => {
       res.send(returnData);
     }).catch(err => {
-      res.send({
-        error: err.error,
-        message: err.message,
-      });
+      res.status(err.status)
+        .send({
+          error: err.error,
+          message: err.message,
+        });
     });
   }
 }

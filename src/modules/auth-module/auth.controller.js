@@ -28,7 +28,7 @@ export async function registerAccount({ data }) {
     });
 }
 
-export function loginAccount({ data }) {
+export async function loginAccount({ data }) {
   const schema = Joi.object({
     email: Joi.string()
       .required(),
@@ -41,10 +41,11 @@ export function loginAccount({ data }) {
       stripUnknown: true
     })
     .then(data => {
-      return data;
+      return AccountService.loginAccount(data);
     })
     .catch(err => {
       return Promise.reject({
+        status: 400,
         error: 'SchemaValidationError',
         message: err.message,
       });
